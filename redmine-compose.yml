@@ -1,0 +1,39 @@
+version: "3.7"
+
+networks:
+  redmine_network:
+
+volumes:
+  redmine_db:
+  redmine_data:
+
+services:
+  redmine_db:
+    image: postgres:13
+    restart: unless-stopped
+    networks:
+      - redmine_network
+    volumes:
+      - redmine_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: redmine123
+      POSTGRES_DB: redmine
+      POSTGRES_USER: redmine
+
+  redmine:
+    image: redmine:latest
+    restart: unless-stopped
+    networks:
+      - redmine_network
+    ports:
+      - "8358:3000"
+    volumes:
+      - redmine_data:/usr/src/redmine/files
+    environment:
+      REDMINE_DB_POSTGRES: redmine_db
+      REDMINE_DB_DATABASE: redmine
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_PASSWORD: redmine123
+      REDMINE_SECRET_KEY_BASE: "changethistoareallylongrandomstring1234567890"
+    depends_on:
+      - redmine_db
