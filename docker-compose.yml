@@ -8,32 +8,10 @@ volumes:
   pgdata:
   opdata:
 
-x-op-restart-policy: &restart_policy
-  restart: unless-stopped
-
-x-op-image: &image
-  image: openproject/openproject:15-slim
-
-x-op-app: &app
-  <<: *image
-  <<: *restart_policy
-  environment:
-    OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-false}"
-    OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-project.christopherfullon.com}"
-    SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
-    DATABASE_URL: "postgresql://postgres:${DB_PASSWORD:-openproject}@db/openproject?pool=100"
-    OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
-    USE_PUMA: "true"
-  volumes:
-    - "${OPDATA:-opdata}:/var/openproject/assets"
-  depends_on:
-    - db
-    - cache
-
 services:
   db:
     image: postgres:13
-    <<: *restart_policy
+    restart: unless-stopped
     networks:
       - backend
     volumes:
@@ -45,12 +23,45 @@ services:
 
   cache:
     image: memcached
-    <<: *restart_policy
+    restart: unless-stopped
     networks:
       - backend
 
+  seeder:
+    image: openproject/openproject:15-slim
+    restart: on-failure
+    environment:
+      OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-false}"
+      OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-project.christopherfullon.com}"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+      DATABASE_URL: "postgresql://postgres:${DB_PASSWORD:-openproject}@db/openproject?pool=100"
+      OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
+      USE_PUMA: "true"
+    volumes:
+      - "${OPDATA:-opdata}:/var/openproject/assets"
+    depends_on:
+      - db
+      - cache
+    networks:
+      - backend
+    command: "./docker/prod/seeder"
+
   web:
-    <<: *app
+    image: openproject/openproject:15-slim
+    restart: unless-stopped
+    environment:
+      OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-false}"
+      OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-project.christopherfullon.com}"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+      DATABASE_URL: "postgresql://postgres:${DB_PASSWORD:-openproject}@db/openproject?pool=100"
+      OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
+      USE_PUMA: "true"
+    volumes:
+      - "${OPDATA:-opdata}:/var/openproject/assets"
+    depends_on:
+      - db
+      - cache
+      - seeder
     networks:
       - frontend
       - backend
@@ -59,20 +70,41 @@ services:
     command: "./docker/prod/web"
 
   worker:
-    <<: *app
+    image: openproject/openproject:15-slim
+    restart: unless-stopped
+    environment:
+      OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-false}"
+      OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-project.christopherfullon.com}"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+      DATABASE_URL: "postgresql://postgres:${DB_PASSWORD:-openproject}@db/openproject?pool=100"
+      OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
+      USE_PUMA: "true"
+    volumes:
+      - "${OPDATA:-opdata}:/var/openproject/assets"
+    depends_on:
+      - db
+      - cache
+      - seeder
     networks:
       - backend
     command: "./docker/prod/worker"
 
   cron:
-    <<: *app
+    image: openproject/openproject:15-slim
+    restart: unless-stopped
+    environment:
+      OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-false}"
+      OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-project.christopherfullon.com}"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+      DATABASE_URL: "postgresql://postgres:${DB_PASSWORD:-openproject}@db/openproject?pool=100"
+      OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
+      USE_PUMA: "true"
+    volumes:
+      - "${OPDATA:-opdata}:/var/openproject/assets"
+    depends_on:
+      - db
+      - cache
+      - seeder
     networks:
       - backend
     command: "./docker/prod/cron"
-
-  seeder:
-    <<: *app
-    networks:
-      - backend
-    command: "./docker/prod/seeder"
-    restart: on-failure
