@@ -31,7 +31,7 @@ services:
     image: openproject/openproject:15-slim
     restart: on-failure
     environment:
-      OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-false}"
+      OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-true}"
       OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-project.christopherfullon.com}"
       SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
       DATABASE_URL: "postgresql://postgres:${DB_PASSWORD:-openproject}@db/openproject?pool=100"
