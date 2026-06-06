@@ -1,0 +1,100 @@
+version: "3.7"
+
+networks:
+  taiga_network:
+
+volumes:
+  taiga_db:
+  taiga_media:
+  taiga_static:
+  taiga_redis:
+
+services:
+  taiga_db:
+    image: postgres:13
+    restart: unless-stopped
+    networks:
+      - taiga_network
+    volumes:
+      - taiga_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: taiga
+      POSTGRES_USER: taiga
+      POSTGRES_PASSWORD: taiga123
+
+  taiga_redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - taiga_network
+
+  taiga_back:
+    image: taigaio/taiga-back:latest
+    restart: unless-stopped
+    networks:
+      - taiga_network
+    volumes:
+      - taiga_media:/taiga-back/media
+      - taiga_static:/taiga-back/static
+    environment:
+      POSTGRES_DB: taiga
+      POSTGRES_USER: taiga
+      POSTGRES_PASSWORD: taiga123
+      POSTGRES_HOST: taiga_db
+      TAIGA_SECRET_KEY: "changethistoareallylongrandomstring1234567890"
+      TAIGA_SITES_SCHEME: "http"
+      TAIGA_SITES_DOMAIN: "christopherfullon.com:8357"
+      TAIGA_SUBPATH: ""
+      ENABLE_TELEMETRY: "False"
+      REDIS_URL: "redis://taiga_redis:6379"
+    depends_on:
+      - taiga_db
+      - taiga_redis
+
+  taiga_async:
+    image: taigaio/taiga-back:latest
+    restart: unless-stopped
+    networks:
+      - taiga_network
+    volumes:
+      - taiga_media:/taiga-back/media
+    environment:
+      POSTGRES_DB: taiga
+      POSTGRES_USER: taiga
+      POSTGRES_PASSWORD: taiga123
+      POSTGRES_HOST: taiga_db
+      TAIGA_SECRET_KEY: "changethistoareallylongrandomstring1234567890"
+      TAIGA_SITES_SCHEME: "http"
+      TAIGA_SITES_DOMAIN: "christopherfullon.com:8357"
+      ENABLE_TELEMETRY: "False"
+      REDIS_URL: "redis://taiga_redis:6379"
+    command: "python -m celery -A taiga.celery worker --concurrency 4 -l INFO"
+    depends_on:
+      - taiga_db
+      - taiga_redis
+      - taiga_back
+
+  taiga_front:
+    image: taigaio/taiga-front:latest
+    restart: unless-stopped
+    networks:
+      - taiga_network
+    environment:
+      TAIGA_URL: "http://christopherfullon.com:8357"
+      TAIGA_WEBSOCKETS_URL: "ws://christopherfullon.com:8357"
+    depends_on:
+      - taiga_back
+
+  taiga_gateway:
+    image: nginx:alpine
+    restart: unless-stopped
+    networks:
+      - taiga_network
+    ports:
+      - "8357:80"
+    volumes:
+      - taiga_media:/taiga/media
+      - taiga_static:/taiga/static
+    depends_on:
+      - taiga_back
+      - taiga_front
