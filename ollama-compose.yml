@@ -34,7 +34,7 @@ services:
       - ollama
     environment:
       OLLAMA_BASE_URL: "http://ollama:11434"
-      WEBUI_SECRET_KEY: "dGhpcyBpcyBhIHRlc3Qga2V5IGZvciBvcGVud2VidWkh"
+      WEBUI_SECRET_KEY: "d2VidWlzZWNyZXRrZXkxMjM0NTY3ODkwMTIzNDU2"
       WEBUI_AUTH: "true"
       DEFAULT_USER_ROLE: "user"
       ENABLE_SIGNUP: "true"
