@@ -34,12 +34,4 @@ services:
       - ollama
     environment:
       OLLAMA_BASE_URL: "http://ollama:11434"
-      WEBUI_SECRET_KEY: "d2VidWlzZWNyZXRrZXkxMjM0NTY3ODkwMTIzNDU2"
-      WEBUI_AUTH: "true"
-      DEFAULT_USER_ROLE: "user"
-      ENABLE_SIGNUP: "true"
-      WEBUI_NAME: "Christopher Fullon AI"
-      WEBUI_URL: "https://openui.christopherfullon.com"
-      ENABLE_ADMIN_EXPORT: "true"
-      WEBUI_ADMIN_EMAIL: "abdomenda@christopherfullon.com"
-      WEBUI_ADMIN_PASSWORD: "Chris1234."
+      WEBUI_SECRET_KEY: "d2VidWlzZWNyZXRrZXkxMjM0NTY3ODkwMTIzNDU
