@@ -1,0 +1,45 @@
+version: "3.7"
+
+networks:
+  ollama_network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+  openwebui_data:
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: always
+    networks:
+      - ollama_network
+    ports:
+      - "6576:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      OLLAMA_KEEP_ALIVE: "24h"
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    restart: always
+    networks:
+      - ollama_network
+    ports:
+      - "7573:8080"
+    volumes:
+      - openwebui_data:/app/backend/data
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      WEBUI_SECRET_KEY: "changethis_openwebui_secret_key_random123456"
+      WEBUI_AUTH: "true"
+      DEFAULT_USER_ROLE: "user"
+      ENABLE_SIGNUP: "true"
+      WEBUI_NAME: "Christopher Fullon AI"
+      WEBUI_URL: "https://openui.christopherfullon.com"
+      ENABLE_ADMIN_EXPORT: "true"
+      WEBUI_ADMIN_EMAIL: "abdomenda"
+      WEBUI_ADMIN_PASSWORD: "Chris1234."
