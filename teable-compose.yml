@@ -47,10 +47,8 @@ services:
     volumes:
       - /DATA/AppData/teable/assets:/app/.assets:rw
     depends_on:
-      teable_db:
-        condition: service_healthy
-      teable_cache:
-        condition: service_healthy
+      - teable_db
+      - teable_cache
     environment:
       TZ: UTC
       PUBLIC_ORIGIN: "https://teable.christopherfullon.com"
