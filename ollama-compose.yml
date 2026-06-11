@@ -41,5 +41,5 @@ services:
       WEBUI_NAME: "Christopher Fullon AI"
       WEBUI_URL: "https://openui.christopherfullon.com"
       ENABLE_ADMIN_EXPORT: "true"
-      WEBUI_ADMIN_EMAIL: "abdomenda"
+      WEBUI_ADMIN_EMAIL: "abdomenda@christopherfullon.com"
       WEBUI_ADMIN_PASSWORD: "Chris1234."
