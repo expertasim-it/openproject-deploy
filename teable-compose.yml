@@ -1,0 +1,62 @@
+version: "3.7"
+
+networks:
+  teable_network:
+    driver: bridge
+
+services:
+  teable_db:
+    image: postgres:15.4
+    restart: always
+    networks:
+      - teable_network
+    volumes:
+      - /DATA/AppData/teable/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: teable
+      POSTGRES_USER: teable
+      POSTGRES_PASSWORD: teable_db_pass123
+      TZ: UTC
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U teable -d teable'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  teable_cache:
+    image: redis:7.2.4
+    restart: always
+    networks:
+      - teable_network
+    volumes:
+      - /DATA/AppData/teable/redis:/data
+    command: redis-server --appendonly yes --requirepass teable_redis_pass123
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  teable:
+    image: ghcr.io/teableio/teable:latest
+    restart: always
+    networks:
+      - teable_network
+    ports:
+      - "6578:3000"
+    volumes:
+      - /DATA/AppData/teable/assets:/app/.assets:rw
+    depends_on:
+      teable_db:
+        condition: service_healthy
+      teable_cache:
+        condition: service_healthy
+    environment:
+      TZ: UTC
+      PUBLIC_ORIGIN: "https://teable.christopherfullon.com"
+      PRISMA_DATABASE_URL: "postgresql://teable:teable_db_pass123@teable_db:5432/teable"
+      BACKEND_CACHE_PROVIDER: redis
+      BACKEND_CACHE_REDIS_URI: "redis://default:teable_redis_pass123@teable_cache:6379/0"
+      BACKEND_STORAGE_PROVIDER: local
+      BACKEND_STORAGE_LOCAL_PATH: /app/.assets
+      SECRET_KEY: "changethis_teable_secret_key_very_long_random_string_123456"
