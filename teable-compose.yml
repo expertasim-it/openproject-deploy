@@ -38,7 +38,7 @@ services:
     networks:
       - teable_network
     ports:
-      - "7568:3000"
+      - "6578:3000"
     volumes:
       - teable_assets:/app/.assets
     depends_on:
