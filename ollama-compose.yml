@@ -22,7 +22,6 @@ services:
       - /dev/dri:/dev/dri
     group_add:
       - video
-      - render
     environment:
       OLLAMA_KEEP_ALIVE: "24h"
       OLLAMA_INTEL_GPU: "1"
