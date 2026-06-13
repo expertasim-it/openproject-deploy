@@ -18,14 +18,15 @@ services:
       - "6576:11434"
     volumes:
       - ollama_data:/root/.ollama
-    environment:
-      OLLAMA_KEEP_ALIVE: "24h"
-      OLLAMA_INTEL_GPU: "1"
     devices:
       - /dev/dri:/dev/dri
     group_add:
       - video
       - render
+    environment:
+      OLLAMA_KEEP_ALIVE: "24h"
+      OLLAMA_INTEL_GPU: "1"
+      ONEAPI_DEVICE_SELECTOR: "level_zero:0"
 
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
