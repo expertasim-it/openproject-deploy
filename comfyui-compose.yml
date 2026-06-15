@@ -1,0 +1,31 @@
+version: "3.7"
+
+networks:
+  comfyui_network:
+    driver: bridge
+
+volumes:
+  comfyui_models:
+  comfyui_user:
+  comfyui_custom_nodes:
+  comfyui_output:
+
+services:
+  comfyui:
+    image: reliqcontainers/comfyui:xpu-master
+    restart: unless-stopped
+    networks:
+      - comfyui_network
+    ports:
+      - "8188:8188"
+    volumes:
+      - comfyui_models:/app/models
+      - comfyui_user:/app/user
+      - comfyui_custom_nodes:/app/custom_nodes
+      - comfyui_output:/app/output
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
+    environment:
+      CLI_ARGS: "--use-pytorch-cross-attention"
