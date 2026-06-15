@@ -20,8 +20,9 @@ services:
       - svg_templates:/app/templates
       - svg_outputs:/app/outputs
     working_dir: /app
-    command: >
-      sh -c "pip install flask lxml &&
-             python server.py"
     environment:
       FLASK_ENV: production
+    command: >
+      sh -c "pip install flask lxml &&
+             curl -o /app/server.py https://raw.githubusercontent.com/expertasim-it/openproject-deploy/main/svg-server.py &&
+             python /app/server.py"
