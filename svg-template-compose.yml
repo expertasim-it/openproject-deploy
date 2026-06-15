@@ -10,7 +10,9 @@ volumes:
 
 services:
   svg-templater:
-    image: python:3.11-slim
+    build:
+      context: .
+      dockerfile: Dockerfile.svg
     restart: unless-stopped
     networks:
       - social_network
@@ -19,17 +21,6 @@ services:
     volumes:
       - svg_templates:/app/templates
       - svg_outputs:/app/outputs
-    working_dir: /app
     environment:
       FLASK_ENV: production
       PYTHONUNBUFFERED: "1"
-    command: >
-      sh -c "pip install flask lxml -q &&
-             python -c \"
-import os, urllib.request
-os.makedirs('/app/templates', exist_ok=True)
-os.makedirs('/app/outputs', exist_ok=True)
-url='https://raw.githubusercontent.com/expertasim-it/openproject-deploy/main/svg-server.py'
-urllib.request.urlretrieve(url, '/app/server.py')
-print('Downloaded server.py')
-\" && python /app/server.py"
