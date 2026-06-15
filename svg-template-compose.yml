@@ -1,0 +1,27 @@
+version: "3.7"
+
+networks:
+  social_network:
+    external: true
+
+volumes:
+  svg_templates:
+  svg_outputs:
+
+services:
+  svg-templater:
+    image: python:3.11-slim
+    restart: unless-stopped
+    networks:
+      - social_network
+    ports:
+      - "8765:8765"
+    volumes:
+      - svg_templates:/app/templates
+      - svg_outputs:/app/outputs
+    working_dir: /app
+    command: >
+      sh -c "pip install flask lxml &&
+             python server.py"
+    environment:
+      FLASK_ENV: production
