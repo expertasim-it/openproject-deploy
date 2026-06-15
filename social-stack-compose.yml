@@ -1,0 +1,48 @@
+version: "3.7"
+
+networks:
+  social_network:
+    driver: bridge
+
+volumes:
+  browserless_data:
+  playwright_state:
+  playwright_screenshots:
+  playwright_logs:
+  playwright_exports:
+
+services:
+  browserless:
+    image: ghcr.io/browserless/chromium:latest
+    restart: unless-stopped
+    networks:
+      - social_network
+    ports:
+      - "3030:3000"
+    environment:
+      TOKEN: "social_browserless_token_123456"
+      CONCURRENT: "5"
+      TIMEOUT: "60000"
+      KEEP_ALIVE: "true"
+      HEALTH: "true"
+    volumes:
+      - browserless_data:/tmp/browserless
+
+  playwright-worker:
+    image: mcr.microsoft.com/playwright:v1.44.0-jammy
+    restart: unless-stopped
+    networks:
+      - social_network
+    volumes:
+      - playwright_state:/app/browser-state
+      - playwright_screenshots:/app/screenshots
+      - playwright_logs:/app/logs
+      - playwright_exports:/app/exports
+    environment:
+      BROWSERLESS_URL: "ws://browserless:3000"
+      BROWSERLESS_TOKEN: "social_browserless_token_123456"
+    command: >
+      sh -c "npm install -g @playwright/test &&
+             tail -f /dev/null"
+    depends_on:
+      - browserless
