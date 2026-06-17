@@ -1,0 +1,29 @@
+version: "3.7"
+
+networks:
+  social_network:
+    driver: bridge
+
+volumes:
+  renderer_outputs:
+
+services:
+  svg-renderer:
+    build:
+      context: .
+      dockerfile: Dockerfile.renderer
+    restart: unless-stopped
+    networks:
+      - social_network
+    ports:
+      - "8766:8766"
+    volumes:
+      - renderer_outputs:/app/outputs
+      - svg_outputs:/app/inputs
+    environment:
+      PYTHONUNBUFFERED: "1"
+
+volumes:
+  svg_outputs:
+    external: true
+    name: svg-templater_svg_outputs
