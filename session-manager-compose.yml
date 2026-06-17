@@ -1,0 +1,23 @@
+version: "3.7"
+
+networks:
+  social_network:
+    driver: bridge
+
+volumes:
+  session_data:
+
+services:
+  session-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile.sessionmanager
+    restart: unless-stopped
+    networks:
+      - social_network
+    ports:
+      - "8767:8767"
+    volumes:
+      - session_data:/app/sessions
+    environment:
+      PYTHONUNBUFFERED: "1"
