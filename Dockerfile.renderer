@@ -2,11 +2,11 @@ FROM python:3.11-slim
 
 RUN apt-get update -y
 
-RUN apt-get install -y --no-install-recommends librsvg2-bin
+RUN apt-get install -y --no-install-recommends inkscape
 
 WORKDIR /app
 
-RUN pip install flask cairosvg --no-cache-dir
+RUN pip install flask --no-cache-dir
 
 COPY renderer-server.py /app/server.py
 
