@@ -1,0 +1,24 @@
+version: "3.7"
+
+networks:
+  social_network:
+    external: true
+    name: social-stack_social_network
+
+volumes:
+  artifacts_data:
+
+services:
+  artifacts-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile.artifacts
+    restart: unless-stopped
+    networks:
+      - social_network
+    ports:
+      - "8768:8768"
+    volumes:
+      - artifacts_data:/app/artifacts
+    environment:
+      PYTHONUNBUFFERED: "1"
