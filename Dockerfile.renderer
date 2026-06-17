@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y \
+    librsvg2-bin \
+    libcairo2 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libffi-dev \
+    shared-mime-info \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN pip install flask cairosvg --no-cache-dir
+
+COPY renderer-server.py /app/server.py
+
+RUN mkdir -p /app/inputs /app/outputs
+
+EXPOSE 8766
+
+CMD ["python", "/app/server.py"]
