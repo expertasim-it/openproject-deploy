@@ -2,7 +2,8 @@ version: "3.7"
 
 networks:
   social_network:
-    driver: bridge
+    external: true
+    name: social-stack_social_network
 
 volumes:
   session_data:
