@@ -6,6 +6,9 @@ networks:
 
 volumes:
   renderer_outputs:
+  svg_outputs:
+    external: true
+    name: svg-templater_svg_outputs
 
 services:
   svg-renderer:
@@ -22,8 +25,3 @@ services:
       - svg_outputs:/app/inputs
     environment:
       PYTHONUNBUFFERED: "1"
-
-volumes:
-  svg_outputs:
-    external: true
-    name: svg-templater_svg_outputs
