@@ -1,0 +1,27 @@
+version: "3.7"
+
+networks:
+  chatterbox_network:
+    driver: bridge
+
+volumes:
+  chatterbox_models:
+  chatterbox_voices:
+  chatterbox_reference:
+  chatterbox_config:
+
+services:
+  chatterbox:
+    image: devnen/chatterbox-tts-server:latest-cpu
+    restart: unless-stopped
+    networks:
+      - chatterbox_network
+    ports:
+      - "8004:8004"
+    volumes:
+      - chatterbox_models:/app/models
+      - chatterbox_voices:/app/voices
+      - chatterbox_reference:/app/reference_audio
+      - chatterbox_config:/app/config
+    environment:
+      PYTHONUNBUFFERED: "1"
