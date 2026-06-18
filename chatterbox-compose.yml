@@ -5,23 +5,28 @@ networks:
     driver: bridge
 
 volumes:
-  chatterbox_models:
+  chatterbox_hf_cache:
   chatterbox_voices:
   chatterbox_reference:
-  chatterbox_config:
+  chatterbox_outputs:
+  chatterbox_logs:
 
 services:
   chatterbox:
-    image: devnen/chatterbox-tts-server:latest-cpu
+    build:
+      context: https://github.com/devnen/Chatterbox-TTS-Server.git
+      dockerfile: Dockerfile.cpu
     restart: unless-stopped
     networks:
       - chatterbox_network
     ports:
       - "8004:8004"
     volumes:
-      - chatterbox_models:/app/models
       - chatterbox_voices:/app/voices
       - chatterbox_reference:/app/reference_audio
-      - chatterbox_config:/app/config
+      - chatterbox_outputs:/app/outputs
+      - chatterbox_logs:/app/logs
+      - chatterbox_hf_cache:/app/hf_cache
     environment:
       PYTHONUNBUFFERED: "1"
+      HF_HUB_ENABLE_HF_TRANSFER: "1"
