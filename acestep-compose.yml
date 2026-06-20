@@ -22,5 +22,10 @@ services:
     volumes:
       - acestep_models:/app/models
       - acestep_outputs:/app/outputs
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
     environment:
       PYTHONUNBUFFERED: "1"
+      ONEAPI_DEVICE_SELECTOR: "level_zero:0"
