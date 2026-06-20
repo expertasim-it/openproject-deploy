@@ -49,7 +49,14 @@ app.post('/render', async (req, res) => {
           ffmpegLogLevel: 'error'
         },
         puppeteer: {
-          args: ['--no-sandbox', '--disable-setuid-sandbox']
+          args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-gpu',
+            '--enable-unsafe-swiftshader',
+            '--use-gl=swiftshader',
+            '--disable-dev-shm-usage'
+          ]
         }
       }
     });
