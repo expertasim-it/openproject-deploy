@@ -12,6 +12,7 @@
     "@revideo/2d": "latest",
     "@revideo/renderer": "latest",
     "@revideo/vite-plugin": "latest",
+    "@revideo/ui": "latest",
     "vite": "latest",
     "express": "latest"
   }
