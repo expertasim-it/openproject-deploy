@@ -11,6 +11,8 @@
     "@revideo/core": "latest",
     "@revideo/2d": "latest",
     "@revideo/renderer": "latest",
+    "@revideo/vite-plugin": "latest",
+    "vite": "latest",
     "express": "latest"
   }
 }
