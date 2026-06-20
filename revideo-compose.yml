@@ -1,0 +1,24 @@
+version: "3.7"
+
+networks:
+  social_network:
+    external: true
+    name: social-stack_social_network
+
+volumes:
+  revideo_output:
+
+services:
+  video-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.revideo
+    restart: unless-stopped
+    networks:
+      - social_network
+    ports:
+      - "8770:8770"
+    volumes:
+      - revideo_output:/app/output
+    environment:
+      NODE_ENV: production
