@@ -1,9 +1,11 @@
-FROM python:3.11-slim
+FROM ubuntu:22.04
 
 WORKDIR /app
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update -y
-RUN apt-get install -y --no-install-recommends git ffmpeg libsndfile1 build-essential wget gnupg2 ca-certificates
+RUN apt-get install -y --no-install-recommends python3.11 python3-pip python3.11-venv git ffmpeg libsndfile1 build-essential wget gnupg2 ca-certificates
 
 RUN wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor --output /usr/share/keyrings/intel-graphics.gpg
 RUN echo "deb [arch=amd64,i386 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu jammy unified" > /etc/apt/sources.list.d/intel-gpu-jammy.list
@@ -13,9 +15,9 @@ RUN apt-get install -y --no-install-recommends intel-opencl-icd intel-level-zero
 
 RUN git clone https://github.com/ace-step/ACE-Step-1.5.git /app
 
-RUN pip install --pre torch torchaudio torchvision --index-url https://download.pytorch.org/whl/nightly/xpu
+RUN python3.11 -m pip install --pre torch torchaudio torchvision --index-url https://download.pytorch.org/whl/nightly/xpu
 
-RUN pip install --no-cache-dir -r requirements-xpu.txt
+RUN python3.11 -m pip install --no-cache-dir -r requirements-xpu.txt
 
 EXPOSE 7860
 EXPOSE 8001
@@ -25,4 +27,4 @@ ENV SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS=1
 ENV PYTORCH_DEVICE=xpu
 ENV TORCH_COMPILE_BACKEND=eager
 
-CMD ["python", "-m", "acestep.api_server", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["python3.11", "-m", "acestep.api_server", "--host", "0.0.0.0", "--port", "8001"]
