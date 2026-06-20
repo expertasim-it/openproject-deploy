@@ -1,0 +1,16 @@
+{
+  "name": "fullon-video-pipeline",
+  "version": "1.0.0",
+  "description": "Text-driven video compilation pipeline using Revideo",
+  "type": "module",
+  "main": "api-server.js",
+  "scripts": {
+    "start": "node api-server.js"
+  },
+  "dependencies": {
+    "@revideo/core": "^0.9.4",
+    "@revideo/2d": "^0.9.4",
+    "@revideo/renderer": "^0.9.4",
+    "express": "^4.19.2"
+  }
+}
