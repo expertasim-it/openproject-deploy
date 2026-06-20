@@ -11,8 +11,7 @@ RUN wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | gpg --dea
 RUN echo "deb [arch=amd64,i386 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu jammy unified" > /etc/apt/sources.list.d/intel-gpu-jammy.list
 
 RUN apt-get update -y
-RUN apt-get install -y --no-install-recommends intel-opencl-icd intel-level-zero-gpu level-zero level-zero-dev
-
+RUN apt-get install -y --no-install-recommends intel-opencl-icd intel-level-zero-gpu level-zero intel-media-va-driver-non-free libmfx1 libmfxgen1 libvpl2 libegl-mesa0 libgbm1 libgl1-mesa-dri libglapi-mesa libgles2-mesa-dev libglx-mesa0 libigdgmm12 mesa-vulkan-drivers va-driver-all
 RUN git clone https://github.com/ace-step/ACE-Step-1.5.git /app
 
 RUN python3.11 -m pip install --pre torch torchaudio torchvision --index-url https://download.pytorch.org/whl/nightly/xpu
