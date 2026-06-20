@@ -1,0 +1,26 @@
+version: "3.7"
+
+networks:
+  acestep_network:
+    driver: bridge
+
+volumes:
+  acestep_models:
+  acestep_outputs:
+
+services:
+  acestep:
+    build:
+      context: .
+      dockerfile: Dockerfile.acestep
+    restart: unless-stopped
+    networks:
+      - acestep_network
+    ports:
+      - "8001:8001"
+      - "7860:7860"
+    volumes:
+      - acestep_models:/app/models
+      - acestep_outputs:/app/outputs
+    environment:
+      PYTHONUNBUFFERED: "1"
