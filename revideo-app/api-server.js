@@ -2,6 +2,7 @@ import express from 'express';
 import {renderVideo} from '@revideo/renderer';
 import path from 'path';
 import {fileURLToPath} from 'url';
+import fs from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -72,6 +73,19 @@ app.post('/render', async (req, res) => {
   } catch (error) {
     res.status(500).json({error: error.message, stack: error.stack});
   }
+});
+
+app.get('/download/:filename', (req, res) => {
+  const filePath = path.join(OUTPUT_DIR, req.params.filename);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({error: 'File not found'});
+  }
+  res.sendFile(filePath);
+});
+
+app.get('/outputs', (req, res) => {
+  const files = fs.readdirSync(OUTPUT_DIR).filter(f => f.endsWith('.mp4'));
+  res.json({outputs: files});
 });
 
 app.listen(8770, '0.0.0.0', () => {
