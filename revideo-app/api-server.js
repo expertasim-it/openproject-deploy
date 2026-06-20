@@ -53,9 +53,12 @@ app.post('/render', async (req, res) => {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-gpu',
+            '--disable-accelerated-video-encode',
+            '--disable-accelerated-video-decode',
             '--enable-unsafe-swiftshader',
             '--use-gl=swiftshader',
-            '--disable-dev-shm-usage'
+            '--disable-dev-shm-usage',
+            '--disable-software-rasterizer'
           ]
         }
       }
