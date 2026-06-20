@@ -3,7 +3,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 RUN apt-get update -y
-RUN apt-get install -y --no-install-recommends git ffmpeg libsndfile1 build-essential wget gpg-agent
+RUN apt-get install -y --no-install-recommends git ffmpeg libsndfile1 build-essential wget gnupg2 ca-certificates
 
 RUN wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor --output /usr/share/keyrings/intel-graphics.gpg
 RUN echo "deb [arch=amd64,i386 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu jammy unified" > /etc/apt/sources.list.d/intel-gpu-jammy.list
