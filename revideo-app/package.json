@@ -8,9 +8,9 @@
     "start": "node api-server.js"
   },
   "dependencies": {
-    "@revideo/core": "^0.9.4",
-    "@revideo/2d": "^0.9.4",
-    "@revideo/renderer": "^0.9.4",
-    "express": "^4.19.2"
+    "@revideo/core": "latest",
+    "@revideo/2d": "latest",
+    "@revideo/renderer": "latest",
+    "express": "latest"
   }
 }
